@@ -1,0 +1,79 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+@layer base {
+  :root {
+    --background: 247 248 248;
+    --foreground: 26 26 26;
+    --brand: 94 106 210;
+    --accent: 113 112 255;
+    --accent-hover: 130 143 255;
+    --card: 255 255 255;
+    --card-foreground: 26 26 26;
+    --popover: 255 255 255;
+    --popover-foreground: 26 26 26;
+    --primary: 26 26 26;
+    --primary-foreground: 247 248 248;
+    --secondary: 243 244 245;
+    --secondary-foreground: 26 26 26;
+    --muted: 243 244 245;
+    --muted-foreground: 138 143 152;
+    --accent-foreground: 26 26 26;
+    --destructive: 0 84 60;
+    --border: 208 214 224;
+    --input: 208 214 224;
+    --ring: 94 106 210;
+    --radius: 0.5rem;
+  }
+
+  html {
+    font-feature-settings: "cv01", "ss03";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #f7f8f8;
+    color: #1a1a1a;
+    font-family: "Inter Variable", "SF Pro Display", -apple-system, system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue";
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #1a1a1a;
+    font-weight: 510;
+  }
+
+  a {
+    color: #5e6ad2;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #7170ff;
+  }
+
+  ::selection {
+    background-color: rgba(94, 106, 210, 0.2);
+    color: #1a1a1a;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f3f4f5;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a0a0a0;
+  }
+}

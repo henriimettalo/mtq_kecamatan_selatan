@@ -1,0 +1,68 @@
+name: mtq-vps
+services:
+  db:
+    image: mysql:8.4
+    command: ["--default-time-zone=+00:00"]
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:?Jalankan credentials}
+      MYSQL_USER: ${MYSQL_USER:?Isi MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Isi MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Isi MYSQL_ROOT_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks: [database]
+    healthcheck:
+      test: [CMD-SHELL, 'MYSQL_PWD="$$MYSQL_PASSWORD" mysql -h 127.0.0.1 -u "$$MYSQL_USER" "$$MYSQL_DATABASE" -e "SELECT 1" >/dev/null 2>&1']
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+  app:
+    image: mtq-vps-app:local
+    build: .
+    restart: unless-stopped
+    init: true
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      APP_URL: ${APP_URL:?Isi APP_URL}
+      PORT: "3000"
+      DATABASE_URL: ${DATABASE_URL:?Isi DATABASE_URL}
+      SESSION_SECRET: ${SESSION_SECRET:?Isi SESSION_SECRET}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD_HASH: ${ADMIN_PASSWORD_HASH:?Isi ADMIN_PASSWORD_HASH}
+      VIEWER_USERNAME: ${VIEWER_USERNAME:-viewer}
+      VIEWER_PASSWORD_HASH: ${VIEWER_PASSWORD_HASH:-}
+      UPLOAD_DIR: /app/storage/uploads
+      ASSET_DIR: /app/storage/event-assets
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+    ports: ["127.0.0.1:3000:3000"]
+    depends_on:
+      db: {condition: service_healthy}
+    volumes:
+      - uploads:/app/storage/uploads
+      - event_assets:/app/storage/event-assets
+    networks: [database, web]
+    read_only: true
+    tmpfs: ["/tmp"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+volumes:
+  mysql_data:
+  uploads:
+  event_assets:
+networks:
+  database: {internal: true}
+  web:

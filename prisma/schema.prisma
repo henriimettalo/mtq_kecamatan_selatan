@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Event {
+  id           String @id @db.VarChar(80)
+  settings     String @db.LongText
+  revision     Int @default(1)
+  created_at   DateTime @default(now()) @db.DateTime(3)
+  updated_at   DateTime @default(now()) @updatedAt @db.DateTime(3)
+  participants Participant[]
+  audits       EventAudit[]
+  sites        SiteSettings[]
+  @@map("events")
+}
+
+model SiteSettings {
+  id              Int @id
+  active_event_id String @db.VarChar(80)
+  event           Event @relation(fields: [active_event_id], references: [id])
+  @@map("site_settings")
+}
+
+model EventAudit {
+  id              Int @id @default(autoincrement())
+  event_id        String @db.VarChar(80)
+  action          String @db.VarChar(40)
+  actor           String @db.VarChar(150)
+  before_settings String? @db.LongText
+  after_settings  String? @db.LongText
+  created_at      DateTime @default(now()) @db.DateTime(3)
+  event           Event @relation(fields: [event_id], references: [id])
+  @@index([event_id, id])
+  @@map("event_settings_audit")
+}
+
+model Participant {
+  id                         Int @id @default(autoincrement())
+  nik                        String @db.VarChar(16)
+  nama                       String @db.VarChar(150)
+  nomor_whatsapp             String @db.VarChar(20)
+  jenis_kelamin              String @db.VarChar(1)
+  alamat                     String @db.Text
+  tempat_lahir               String @db.VarChar(150)
+  tanggal_lahir              String @db.VarChar(10)
+  asal_sekolah               String? @db.VarChar(255)
+  no_rekening                String? @db.VarChar(80)
+  nama_pemilik_rekening      String? @db.VarChar(150)
+  cabang                     String @db.VarChar(80)
+  kk_filename                String @db.VarChar(255)
+  ktp_filename               String? @db.VarChar(255)
+  akta_filename              String @db.VarChar(255)
+  surat_pernyataan_filename  String @db.VarChar(255)
+  status                     String @default("pending") @db.VarChar(20)
+  rejection_reason           String? @db.Text
+  token                      String? @db.VarChar(36)
+  google_sub                 String? @db.VarChar(255)
+  event_id                   String @db.VarChar(80)
+  branch_name                String? @db.VarChar(150)
+  created_at                 DateTime @default(now()) @db.DateTime(3)
+  event                      Event @relation(fields: [event_id], references: [id])
+  audits                     ParticipantAudit[]
+  @@index([event_id, status, created_at])
+  @@index([google_sub, event_id])
+  @@index([nik])
+  @@map("participants")
+}
+
+model ParticipantSession {
+  token_hash String @id @db.VarChar(64)
+  google_sub String @db.VarChar(255)
+  expires_at Int
+  @@index([expires_at])
+  @@map("participant_sessions")
+}
+
+model ApiKey {
+  id           Int @id @default(autoincrement())
+  name         String @db.VarChar(150)
+  key_prefix   String @db.VarChar(40)
+  key_hash     String @unique @db.VarChar(64)
+  scopes       String @db.VarChar(255)
+  created_by   String @default("admin") @db.VarChar(150)
+  last_used_at DateTime? @db.DateTime(3)
+  revoked_at   DateTime? @db.DateTime(3)
+  created_at   DateTime @default(now()) @db.DateTime(3)
+  @@map("api_keys")
+}
+
+model ParticipantAudit {
+  id               Int @id @default(autoincrement())
+  participant_id   Int
+  action           String @db.VarChar(40)
+  previous_status  String @db.VarChar(20)
+  new_status       String @db.VarChar(20)
+  rejection_reason String? @db.Text
+  actor            String @db.VarChar(150)
+  actor_key_id     Int?
+  ip_address       String @db.VarChar(64)
+  user_agent       String @db.Text
+  created_at       DateTime @default(now()) @db.DateTime(3)
+  participant      Participant @relation(fields: [participant_id], references: [id])
+  @@index([participant_id, id])
+  @@map("participant_audit_logs")
+}

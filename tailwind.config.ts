@@ -1,0 +1,88 @@
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: ["./index.html", "./client/**/*.{ts,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        "bg-marketing": "#f7f8f8",
+        "bg-panel": "#ffffff",
+        "bg-surface": "#f3f4f5",
+        "bg-secondary": "#e8e9ea",
+        "text-primary": "#1a1a1a",
+        "text-secondary": "#62666d",
+        "text-tertiary": "#8a8f98",
+        "text-quaternary": "#a0a4ab",
+        "brand-indigo": "#5e6ad2",
+        "accent-violet": "#7170ff",
+        "accent-hover": "#828fff",
+        "security-lavender": "#7a7fad",
+        "status-green": "#27a644",
+        "status-emerald": "#10b981",
+        "border-primary": "#d0d6e0",
+        "border-secondary": "#e6e6e6",
+        "border-tertiary": "#e6e6e6",
+        "line-tint": "#e6e6e6",
+        "line-tertiary": "#e6e6e6",
+      },
+      fontFamily: {
+        sans: [
+          "Inter Variable",
+          "SF Pro Display",
+          "-apple-system",
+          "system-ui",
+          "Segoe UI",
+          "Roboto",
+          "Oxygen",
+          "Ubuntu",
+          "Cantarell",
+          "Open Sans",
+          "Helvetica Neue",
+        ],
+        mono: [
+          "Berkeley Mono",
+          "ui-monospace",
+          "SF Mono",
+          "Menlo",
+        ],
+      },
+      fontWeight: {
+        light: "300",
+        normal: "400",
+        medium: "510",
+        semibold: "590",
+      },
+      letterSpacing: {
+        "display-xl": "-1.584px",
+        "display-lg": "-1.408px",
+        "display": "-1.056px",
+        "heading-1": "-0.704px",
+        "heading-2": "-0.288px",
+        "heading-3": "-0.24px",
+        "body-lg": "-0.165px",
+        "small": "-0.165px",
+        "caption": "-0.13px",
+        "tiny": "-0.15px",
+      },
+      borderRadius: {
+        micro: "2px",
+        standard: "4px",
+        comfortable: "6px",
+        card: "8px",
+        panel: "12px",
+        large: "22px",
+      },
+      boxShadow: {
+        subtle: "rgba(0,0,0,0.06) 0px 1px 2px 0px",
+        ring: "rgba(0,0,0,0.08) 0px 0px 0px 1px",
+        elevated: "rgba(0,0,0,0.1) 0px 2px 4px",
+        focus: "rgba(0,0,0,0.08) 0px 4px 12px",
+        dialog: "rgba(0,0,0,0) 0px 8px 2px, rgba(0,0,0,0.04) 0px 5px 2px, rgba(0,0,0,0.08) 0px 3px 2px, rgba(0,0,0,0.12) 0px 1px 1px, rgba(0,0,0,0.16) 0px 0px 1px",
+        inset: "rgba(0,0,0,0.06) 0px 0px 8px 0px inset",
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;
